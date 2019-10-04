@@ -71,7 +71,7 @@ def baralho():
     return carta_pegada
 
 
-while saldo >= 0:
+if saldo >= 0:
     carta_retirada_1 = baralho()
     carta_retirada_2 = baralho()
     soma = carta_retirada_1[1] + carta_retirada_2[1]
@@ -109,7 +109,7 @@ while saldo >= 0:
 
             varifica_se_retira = str(input('Deseja retirar mais uma carta? '))
 
-        else:
+        while varifica_se_retira != 'sim':
             if soma < 21 and soma_croupier > 21:
                 print('Você Ganhou! Sua soma foi de {} e o Croupier estourou com {}. '.format(soma, soma_croupier))
                 saldo = saldo + aposta * 1.5
@@ -127,6 +127,5 @@ while saldo >= 0:
                 saldo = saldo
                 print('Seu novo saldo é de {}'.format(saldo))
                 break
-while saldo < 0:
+else:
     print('Você não possui dinheiro para fazer essa transação!')
-    break
