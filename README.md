@@ -1,7 +1,7 @@
 # BlackjackInsper
 ALUNOS
 
--Breno
+-Breno Veloso Eboli, brenove@al.insper.edu.br
 
 -Leonardo Duarte Malta de Abreu, leonardodma@al.insper.edu.br
 
