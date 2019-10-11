@@ -1,16 +1,56 @@
 import random
 
+def contador(mao):
+    a=False
+    listasemas=[]
+    i=0
+    while i<len(mao):
+        if mao[i][1]!=1:
+            listasemas.append(mao[i][1])
+            i+=1
+        elif mao[i][1]==1 and '1' not in listasemas:
+            a=True
+            for e in mao[i+1:]:
+                if mao[i][1]==e[1]:
+                    listasemas.append(e[1])
+            i+=1
+            
+    somatoriosemas=0
+    for g in listasemas:
+        somatoriosemas=somatoriosemas+g
+    if somatoriosemas<=10 and a==True:
+        soma=somatoriosemas+11
+    elif somatoriosemas>10 and a==True:
+        soma=somatoriosemas+1
+    else:
+        soma=somatoriosemas
+    return soma
+
+
+            
+        
+        
+
 jogador = input('Insira seu nome: ')
 print('Olá {}. Vamos começar!'.format(jogador))
+carteira = float(input("Insira o valor da sua carteira: "))
 
-valor_carteira = float(input("Insira o valor da sua carteira: "))
-aposta = float(input('Insira o valor da sua aposta: '))
-saldo = valor_carteira - aposta
-
-
-def baralho():
-    Cartas = {
-        'Ás de  paus (♣)': 11,
+while carteira>0: 
+    v=False
+    n=False
+    x=True
+    y=True
+    aposta = float(input('Insira o valor da sua aposta: '))
+    while aposta>carteira:
+        print('Você não tem esse tanto de dinheiro! Faça uma aposta possível')
+        aposta = float(input('Insira o valor da sua aposta: '))
+        
+    soma=0
+    mao=[]
+    mao_dealer=[]
+    
+    cartas = {
+        'Ás de  paus (♣)': 1,
         '2 de paus (♣)': 2,
         '3 de paus (♣)': 3,
         '4 de paus (♣)': 4,
@@ -24,7 +64,8 @@ def baralho():
         'J de paus (♣)': 10,
         'K de paus (♣)': 10,
 
-        'Ás de copas (♥)': 11,
+
+        'Ás de copas (♥)': 1,
         '2 de copas (♥)': 2,
         '3 de copas (♥)': 3,
         '4 de copas (♥)': 4,
@@ -38,7 +79,8 @@ def baralho():
         'J de copas (♥)': 10,
         'K de copas (♥)': 10,
 
-        'Ás de espadas (♠))': 11,
+
+        'Ás de espadas (♠))': 1,
         '2 de espadas (♠)': 2,
         '3 de espadas (♠)': 3,
         '4 de espadas (♠)': 4,
@@ -52,7 +94,8 @@ def baralho():
         'J de espadas (♠)': 10,
         'K de espadas (♠)': 10,
 
-        'Ás de ouros (♦)': 11,
+
+        'Ás de ouros (♦)': 1,
         '2 de ouros (♦)': 2,
         '3 de ouros (♦)': 3,
         '4 de ouros (♦)': 4,
@@ -65,67 +108,115 @@ def baralho():
         'Q de ouros (♦)': 10,
         'J de ouros (♦)': 10,
         'K de ouros (♦)': 10
-    }
+        }
+    
+    PRIMEIRA_CARTA=random.choice(list(cartas.items())) 
+    del(cartas[PRIMEIRA_CARTA[0]])
+    SEGUNDA_CARTA=random.choice(list(cartas.items()))  
+    del(cartas[SEGUNDA_CARTA[0]])
+    CARTA_DEALER_CIMA=random.choice(list(cartas.items())) 
+    del(cartas[CARTA_DEALER_CIMA[0]])
+    CARTA_DEALER_BAIXO=random.choice(list(cartas.items())) 
+    del(cartas[CARTA_DEALER_BAIXO[0]])
+       
+    
+    mao.append(PRIMEIRA_CARTA)
+    mao.append(SEGUNDA_CARTA)
+    mao_dealer.append(CARTA_DEALER_CIMA)
+    mao_dealer.append(CARTA_DEALER_BAIXO)
+    print('Você retirou {} e {}. Sua soma é {}. A carta virada para cima do dealer é {}'.format(PRIMEIRA_CARTA[0], SEGUNDA_CARTA[0],contador(mao),CARTA_DEALER_CIMA[0]))
+    
+    if contador(mao)==21:
+        print('Blackjack! Você fez 21!')
+        carteira=carteira+1.5*aposta
+        print('Seu novo saldo é de R${}.'.format(carteira))
+        saida=str(input('Digite [sair] para parar de jogar e [continuar] para continuar jogando:'))
+        if saida=='sair':
+            break
+        elif saida=='continuar':
+            continue
 
-    carta_pegada = random.choice(list(Cartas.items()))
-    return carta_pegada
+    mais_carta=str(input('Digite [hit] para mais cartas ou [hold] para fechar a mão:'))
+    
+    while mais_carta=='hit':
+        v=True
+        CARTA_EXTRA=random.choice(list(cartas.items()))
+        del(cartas[CARTA_EXTRA[0]])
+        mao.append(CARTA_EXTRA)
+        print('Você retirou {}. Sua mão é {}. A soma é {}.'.format(CARTA_EXTRA[0],mao,contador(mao)))
+        
+        if contador(mao)>21:
+            print('Você estorou!')
+            carteira=carteira-aposta
+            print('Seu novo saldo é de R${}.'.format(carteira))
+            saida=str(input('Digite [sair] para parar de jogar ou [continuar] para continuar jogando:')) 
+            if saida=='sair':
+                 x=False
+                 break
+            if saida=='continuar':
+                 break
+        elif contador(mao)==21:
+             print('BLACKJACK! Você fez 21!')
+             carteira=carteira+1.5*aposta
+             print('Seu novo saldo é de R${}.'.format(carteira))
+             saida=str(input('Digite [sair] para parar de jogar ou [continuar] para continuar jogando:'))
+             if saida=='sair':
+                 x=False
+                 break
+             if saida=='continuar':
+                 break
+        else:
+            mais_carta=str(input('Digite [hit] para mais cartas ou [hold] para fechar a mão:'))       
+    if x==False and v==True and mais_carta!='hold':
+        break
+    elif x==True and v==True and mais_carta!='hold':
+        continue
 
-
-if saldo >= 0:
-    carta_retirada_1 = baralho()
-    carta_retirada_2 = baralho()
-    soma = carta_retirada_1[1] + carta_retirada_2[1]
-    print('Você retirou {} e {}. Sua soma é {}.'.format(carta_retirada_1[0], carta_retirada_2[0], soma))
-
-    carta1_croupier = baralho()
-    carta2_croupier = baralho()
-    soma_croupier = carta1_croupier[1] + carta2_croupier[1]
-
-    if soma == 21:
-        print('Black Jack!')
-        saldo = saldo + aposta * 1.5
-        print('Seu novo saldo é de {}'.format(saldo))
-    else:
-        varifica_se_retira = str(input('Deseja retirar mais uma carta? '))
-        while varifica_se_retira == 'sim':
-            nova_carta_retirada = baralho()
-            print('Sua nova carta: {}'.format(nova_carta_retirada[0]))
-            soma = soma + nova_carta_retirada[1]
-            print('Sua nova soma é de {}'.format(soma))
-            nova_carta_croupier = baralho()
-            soma_croupier = soma_croupier + nova_carta_croupier[1]
-
-            if soma > 21:
-                print('Você estourou! Sua soma foi de {}'.format(soma))
-                saldo = saldo
-                print('Seu novo saldo é de {}'.format(saldo))
+    while mais_carta=='hold':
+        n=True
+        print('A carta virada para baixo do dealer é {}.A soma do dealer é {}'.format(CARTA_DEALER_BAIXO[0],contador(mao_dealer)))
+        while contador(mao_dealer)<17:
+            CARTA_DEALER_EXTRA=random.choice(list(cartas.items()))
+            del(cartas[CARTA_DEALER_EXTRA[0]])
+            mao_dealer.append(CARTA_DEALER_EXTRA)
+        while contador(mao_dealer)<contador(mao):
+            CARTA_DEALER_EXTRA2=random.choice(list(cartas.items()))
+            del(cartas[CARTA_DEALER_EXTRA2[0]])
+            mao_dealer.append(CARTA_DEALER_EXTRA2)
+        
+        print('O dealer puxou as cartas. A nova mão do dealer é {}. A soma do dealer é {}'.format(mao_dealer,contador(mao_dealer)))    
+        if contador(mao_dealer)>21:
+            print('Você GANHOU!')
+            print('Seu novo saldo é de R${}.'.format(carteira))
+            saida=str(input('Digite [sair] para parar de jogar ou [continuar] para continuar jogando:'))
+            if saida=='sair':
+                y=False
                 break
-
-            elif soma == 21:
-                print('Black Jack!')
-                saldo = saldo + aposta * 1.5
-                print('Seu novo saldo é de {}'.format(saldo))
+            if saida=='continuar':
                 break
+        elif contador(mao_dealer)>contador(mao):
+            print('Você PERDEU!')
+            carteira=carteira-aposta
+            print('Seu novo saldo é de R${}.'.format(carteira))
+            saida=str(input('Digite [sair] para parar de jogar ou [continuar] para continuar jogando:')) 
+            if saida=='sair':
+                 y=False
+                 break
+            if saida=='continuar':
+                 break 
+        elif contador(mao_dealer)==contador(mao):
+            print('EMPATE!')
+            print('Seu novo saldo é de R${}.'.format(carteira))
+            saida=str(input('Digite [sair] para parar de jogar ou [continuar] para continuar jogando:')) 
+            if saida=='sair':
+                 y=False
+                 break
+            if saida=='continuar':
+                 break 
+    if y==False and n==True:
+        break
+    elif y==True and n==True:
+        continue
 
-            varifica_se_retira = str(input('Deseja retirar mais uma carta? '))
-
-        while varifica_se_retira != 'sim':
-            if soma < 21 and soma_croupier > 21:
-                print('Você Ganhou! Sua soma foi de {} e o Croupier estourou com {}. '.format(soma, soma_croupier))
-                saldo = saldo + aposta * 1.5
-                print('Seu novo saldo é de {}'.format(saldo))
-                break
-
-            elif 21 > soma > soma_croupier and soma > soma_croupier:
-                print('Você Ganhou! Sua soma foi de {} e o Croupier estourou com {}. '.format(soma, soma_croupier))
-                saldo = saldo + aposta * 1.5
-                print('Seu novo saldo é de {}'.format(saldo))
-                break
-
-            elif 21 > soma and 21 > soma_croupier > soma:
-                print('Você perdeu! Sua soma foi de {} de a do Croupier de {}'.format(soma, soma_croupier))
-                saldo = saldo
-                print('Seu novo saldo é de {}'.format(saldo))
-                break
-else:
-    print('Você não possui dinheiro para fazer essa transação!')
+if carteira<=0:
+    print('Acabou seu dinheiro!!')
